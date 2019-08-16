@@ -4,7 +4,48 @@ Created on Wed Aug 14 22:24:02 2019
 
 @author: yifeng
 """
+# 85.最大矩形
 
+#   解法一：栈
+class Solution:
+    def leetcode84(self,heights):
+        #直方图的高，返回最大可形成的矩形面积
+        stack = []
+        heights = [0]+heights+[0]
+        res = 0 
+        for i in range(len(heights)):
+            while stack and heights[stack[-1]]>heights[i]:
+                tmp = stack.pop()
+                res = max(res,heights[tmp]*(i-stack[-1]-1))
+            stack.append(i)
+        return res
+    
+    def maximalRectangle(self,matrix):
+        # 遍历每一行，值为以该行为底边的高，然后计算每一行的最大矩形面积
+        dp = [0]*len(matrix[0])
+        res = 0
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+#                print(dp)
+                # 以i行元素为底的直方图
+                dp[j] = dp[j]+1 if matrix[i][j]=='1' else 0
+            res = max(res,self.leetcode84(dp))
+            
+        # 以列的形式计算，也可以
+#        dp = [0]*len(matrix)
+#        res = 0
+#        for i in range(len(matrix[0])):
+#            for j in range(len(matrix)):
+#                dp[j] = dp[j]+1 if matrix[j][i] == '1' else 0
+#            res = max(res,self.leetcode84(dp))
+        return res
+matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+so = Solution()
+so.maximalRectangle(matrix)
+
+
+
+#=====解法二，遍历（i,j），得到以(i,j)为右下角的最大矩形面积
 class Solution:
     def maximalRectangle(self, matrix):
         max_area = 0
@@ -26,3 +67,5 @@ class Solution:
 matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
 so = Solution()
 so.maximalRectangle(matrix)
+
+#
